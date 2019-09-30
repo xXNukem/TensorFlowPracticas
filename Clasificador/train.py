@@ -25,7 +25,7 @@ filter_size_1 = (3, 3)  # Tamaño de los filtros
 filter_size_2 = (2, 2)
 pool_size = (2, 2)  # Tamaño del filtro de max pooling
 nClasses = 10  # Clases, 10 clases para 10 numeros
-lr = 0.0004  # Learning rate, mide los ajustes para acercarse a la prediccion
+lr = 0.0010  # Learning rate, mide los ajustes para acercarse a la prediccion
 # Tamaños de filtros y demas sacados de las recomendaciones en la documentacion y otros tutoriales
 
 # Preprocesamiento de imagenes
