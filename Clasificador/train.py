@@ -8,7 +8,7 @@ from tensorflow.python.keras.layers import Dropout, Flatten, Dense
 from tensorflow.python.keras.layers import Convolution2D, MaxPooling2D
 from tensorflow.python.keras import backend as K
 
-K.clear_session()
+K.clear_session() #Eliminamos posibles sesiones de Keras abiertas
 
 data_train = './data/trainingSet'
 data_test = './data/trainingSet'

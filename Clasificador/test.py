@@ -1,8 +1,6 @@
 import numpy as np
 from keras.preprocessing.image import load_img, img_to_array
-from keras.models import load_model
-from keras.utils import CustomObjectScope
-from keras.initializers import glorot_uniform
+
 import tensorflow as tf
 
 width, height = 28, 28
