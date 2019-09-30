@@ -47,4 +47,4 @@ def predecir(file):
     return answer
 
 
-predecir('./data/testSet/img_215.jpg')
+predecir('./numerosPaint/5.jpg')
