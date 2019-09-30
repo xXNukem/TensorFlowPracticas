@@ -5,23 +5,23 @@ from keras.utils import CustomObjectScope
 from keras.initializers import glorot_uniform
 import tensorflow as tf
 
-longitud, altura = 28, 28
-modelo = './model/ModeloRed1.h5'
-pesos_modelo = './model/ModeloPesos1.h5'
-cnn = tf.keras.models.load_model(modelo)
+width, height = 28, 28
+model = './model/ModeloRed1.h5'
+model_weights = './model/ModeloPesos1.h5'
+cnn = tf.keras.models.load_model(model)
 
-cnn.load_weights(pesos_modelo)
+cnn.load_weights(model_weights)
 
 
-def predecir(file):
-    x = load_img(file, target_size=(longitud, altura))
+def prediction(file):
+    x = load_img(file, target_size=(width, height))
     x = img_to_array(x)
     x = np.expand_dims(x, axis=0)
-    array = cnn.predict(x)
-    result = array[0]
+    predictions = cnn.predict(x)
+    result = predictions[0]
     answer = np.argmax(result)
     print('Respuesta: ')
-    print(array[0])
+    print(predictions[0])
 
     if answer == 0:
         print("El numero es: 0")
@@ -47,4 +47,4 @@ def predecir(file):
     return answer
 
 
-predecir('./numerosPaint/5.jpg')
+prediction('./numerosPaint/5.jpg')
