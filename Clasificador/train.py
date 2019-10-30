@@ -6,7 +6,7 @@ from tensorflow.python.keras import optimizers
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dropout, Flatten, Dense
 from tensorflow.python.keras.layers import Convolution2D, MaxPooling2D
-from tensorflow.python.keras import backend as K
+from tensorflow.pythonc.keras import backend as K
 
 K.clear_session() #Eliminamos posibles sesiones de Keras abiertas
 

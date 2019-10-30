@@ -14,7 +14,6 @@ iris.keys()
 X_train,X_test,Y_train,Y_test=train_test_split(iris['data'],iris['target'])
 #X tiene las flores con sus datos
 #Y tiene las clasificaciones
-
 knn=KNeighborsClassifier(n_neighbors=25)
 knn.fit(X_train,Y_train)
 print(knn.score(X_test,Y_test))
