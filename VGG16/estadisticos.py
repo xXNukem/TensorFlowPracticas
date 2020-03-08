@@ -1,5 +1,57 @@
-"""Clasificador con VGG16 DIABETIC RETINOPLATY"""
 from __future__ import absolute_import, division, print_function, unicode_literals
+import numpy as np
+from os import listdir
+import os
+from keras.preprocessing.image import load_img
+from keras.preprocessing.image import img_to_array
+
+imgs_path='./resized_train_cropped/resized_train_cropped/'
+imgs=listdir('./resized_train_cropped/resized_train_cropped/')
+c=0
+"""
+for i in imgs:
+  print('Insertando imgen: ', i , 'en el vector')
+  img_vector=imgs.append(i)
+  c+=1
+  print('Imagenes cargadas: ',c)
+"""
+# Get mean, std of R,G,B images
+train_mean = np.zeros((1,1,3))
+train_std = np.zeros((1,1,3))
+
+n = len(imgs)
+for img_name in imgs:
+  img = load_img(os.path.join(imgs_path, img_name))
+  img = img_to_array(img)
+  #img /= 255.
+  for channel in range(img.shape[2]):
+    print('Procesando imagen: ',img_name)
+    train_mean[0,0,channel] += np.mean(img[:,:,channel])
+    train_std[0,0,channel] += np.std(img[:,:,channel])
+    print('Media acumulada: ',train_mean)
+    print('Desviacion típica acumulada:',train_std)
+
+train_mean = train_mean / n
+train_std = train_std / n
+
+print('Valor medio de canales RGB (train):')
+print(train_mean)
+print('Desviación típica de canales RGB (train):')
+print(train_std)
+
+#Escritura en el fichero
+
+f=open('statistics.txt','w')
+data=[train_mean,train_std]
+
+for line in data:
+  print(line,file=f)
+
+f.close()
+
+#----------------------------------
+
+
 import os
 import tensorboard
 from keras.preprocessing.image import ImageDataGenerator
@@ -40,9 +92,9 @@ trainLabels["image"]=trainLabels["image"].apply(append_ext)
 train_datagen = ImageDataGenerator(
     rescale=1.0 / 255.0,
     featurewise_center=True,
-    samplewise_center=True,
-    #samplewise_std_normalization=True,
-    #featurewise_std_normalization=True,
+    #samplewise_center=True,
+    # samplewise_std_normalization=True,
+    featurewise_std_normalization=True,
     horizontal_flip=True,
     vertical_flip=True,
     #rotation_range=15,  # randomly rotate pictures
@@ -52,20 +104,9 @@ train_datagen = ImageDataGenerator(
     #zoom_range=0.2,  # random zoom range
     #horizontal_flip=True,
     validation_split=0.30)
-#Lectura de los estadísticos
-"""
-statistics=[]
-with open('statistics.txt', 'r') as reader:
-    for line in reader:
-        statistics.append(line)
 
-train_datagen.mean=statistics[0]
-train_datagen.std=statistics[1]
-#---------------------
-"""
-
-train_datagen.mean=[[['106.23706131  74.19983673  53.1510033']]]
-train_datagen.std=[[['59.24701176 41.45938749 29.7537066']]]
+train_datagen.mean=train_mean
+train_datagen.std=train_std
 
 train_generator = train_datagen.flow_from_dataframe(
         dataframe=trainLabels,
@@ -94,14 +135,12 @@ model=Sequential()
 model.add(vgg16.VGG16(include_top=False, weights='imagenet', input_tensor=None, input_shape=(224,224,3), pooling=None))
 model.add(Flatten())
 model.add(Dense(4096, activation='relu', name='fc1'))
-model.add(Dropout(0.1))
+#model.add(Dropout(0.1))
 model.add(Dense(2048, activation='relu', name='fc2'))
-model.add(Dropout(0.1))
+#model.add(Dropout(0.1))
 model.add(Dense(1024, activation='relu', name='fc3'))
-model.add(Dropout(0.1))
+#model.add(Dropout(0.1))
 model.add(Dense(512, activation='relu', name='fc4'))
-model.add(Dropout(0.1))
-model.add(Dense(256, activation='relu', name='fc5'))
 model.add(Dense(5, activation='softmax', name='predictions'))
 
 model.compile(loss='categorical_crossentropy',
